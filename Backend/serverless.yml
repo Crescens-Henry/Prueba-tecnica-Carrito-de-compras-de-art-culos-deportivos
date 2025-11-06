@@ -1,0 +1,131 @@
+service: claro-prueba
+frameworkVersion: "*"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  timeout: 60
+  region: us-east-1
+  httpApi:
+    cors: true
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - ses:SendEmail
+            - ses:SendRawEmail
+          Resource: '*'
+  environment:
+    DYNAMODB_ENDPOINT: http://127.0.0.1:8000
+    JWT_SECRET: dev-secret
+    LOG_LEVEL: info
+    AWS_REGION: us-east-1
+    IS_LOCAL: true
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1'
+    BCRYPT_SALT_ROUNDS: 1
+    CART_CACHE_TTL_MS: 0
+    DDB_PREFER_IPV4: true
+    DDB_MAX_ATTEMPTS: 1
+    DDB_USE_CUSTOM_HTTP: true
+    DDB_CONN_TIMEOUT_MS: 1500
+    DDB_SOCKET_TIMEOUT_MS: 4000
+
+plugins:
+  - serverless-esbuild
+  - serverless-offline
+
+custom:
+  esbuild:
+    bundle: true
+    minify: false
+    sourcemap: true
+    target: node18
+    platform: node
+    external:
+      - aws-sdk
+  serverless-offline:
+    host: 127.0.0.1
+    httpPort: 3000
+    lambdaPort: 3002
+    noPrependStageInUrl: true
+
+functions:
+  health:
+    handler: src/health.handler
+    events:
+      - httpApi:
+          path: /health
+          method: get
+  testError:
+    handler: src/health.testError
+    events:
+      - httpApi:
+          path: /test-error
+          method: get
+  authRegister:
+    handler: src/auth.register
+    events:
+      - httpApi:
+          path: /auth/register
+          method: post
+  authLogin:
+    handler: src/auth.login
+    events:
+      - httpApi:
+          path: /auth/login
+          method: post
+  productsList:
+    handler: src/products.list
+    events:
+      - httpApi:
+          path: /products
+          method: get
+  productDetail:
+    handler: src/products.getById
+    events:
+      - httpApi:
+          path: /products/{id}
+          method: get
+  cartGet:
+    handler: src/cart.getCart
+    events:
+      - httpApi:
+          path: /cart
+          method: get
+  cartAdd:
+    handler: src/cart.addItem
+    events:
+      - httpApi:
+          path: /cart/items
+          method: post
+  cartUpdate:
+    handler: src/cart.updateItem
+    events:
+      - httpApi:
+          path: /cart/items/{productId}
+          method: patch
+  cartDelete:
+    handler: src/cart.deleteItem
+    events:
+      - httpApi:
+          path: /cart/items/{productId}
+          method: delete
+  checkout:
+    handler: src/orders.checkout
+    events:
+      - httpApi:
+          path: /checkout
+          method: post
+  ordersList:
+    handler: src/orders.listOrders
+    events:
+      - httpApi:
+          path: /orders
+          method: get
+  orderDetail:
+    handler: src/orders.getOrder
+    events:
+      - httpApi:
+          path: /orders/{orderId}
+          method: get

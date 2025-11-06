@@ -1,0 +1,52 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "description": "Backend Serverless (Lambda) con DynamoDB Local (Docker) y TypeScript",
+  "license": "ISC",
+  "scripts": {
+    "db:up": "docker compose -f ../docker-compose.yml up -d dynamodb",
+    "db:down": "docker compose -f ../docker-compose.yml down",
+    "db:tables": "tsx scripts/create-tables.ts",
+    "db:seed": "tsx scripts/seed-products-pexels.ts",
+    "db:reseed": "npm run db:tables && npm run db:seed",
+    "db:ping": "tsx scripts/ping-db.ts",
+    "dbAdmin:up": "docker compose --profile tools -f ../docker-compose.yml up -d dynamodb-admin",
+    "dbAdmin:down": "docker compose --profile tools -f ../docker-compose.yml stop dynamodb-admin && docker compose --profile tools -f ../docker-compose.yml rm -f dynamodb-admin",
+    "dev:api": "npx serverless@3 offline start --noTimeout",
+    "dev": "npm run db:up && npm run dbAdmin:up && npm run dev:api",
+    "build": "serverless package",
+    "test": "echo \"(pendiente) agrega tests\""
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.922.0",
+    "@aws-sdk/client-ses": "^3.922.0",
+    "@aws-sdk/lib-dynamodb": "^3.922.0",
+    "@aws-sdk/node-http-handler": "^3.374.0",
+    "@middy/core": "^5.4.0",
+    "@middy/http-error-handler": "^5.4.0",
+    "@middy/http-json-body-parser": "^5.4.0",
+    "axios": "^1.7.9",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
+    "fs-extra": "^11.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.16",
+    "p-limit": "^6.2.0",
+    "uuid": "^11.0.3",
+    "winston": "^3.18.3",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/fs-extra": "^11.0.4",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^24.9.2",
+    "@types/nodemailer": "^6.4.15",
+    "serverless": "^4.22.0",
+    "serverless-esbuild": "^1.55.1",
+    "serverless-offline": "^14.4.0",
+    "tsx": "^4.19.1",
+    "typescript": "^5.9.3"
+  }
+}

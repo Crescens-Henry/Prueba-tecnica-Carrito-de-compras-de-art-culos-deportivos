@@ -1,0 +1,59 @@
+# --- OS / Editor ---
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.iml
+
+# --- Node / Package managers ---
+node_modules/
+.pnpm-store/
+# lockfiles se suelen commitear; si no los usas, descomenta la siguiente línea
+# package-lock.json
+# pnpm-lock.yaml
+# yarn.lock
+
+# --- Logs ---
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- TypeScript ---
+*.tsbuildinfo
+
+# --- Caches ---
+.cache/
+.eslintcache
+.vite/
+
+# --- Build outputs ---
+# Frontend (Vite)
+dist/
+# Backend (Serverless)
+.serverless/
+.esbuild/
+.build/
+.webpack/
+
+# --- Env files ---
+.env
+.env.*
+Backend/.env
+Frontend/.env.local
+Frontend/.env.*
+
+# --- Docker / Local data ---
+.dynamodb/
+
+# --- Temp files ---
+*.tmp
+*.swp
+*.swo
+.tmp/
+tmp/
+temp/
+Prueba desarrollador claro herramientas digitales.pdf

@@ -1,0 +1,29 @@
+services:
+  dynamodb:
+    image: amazon/dynamodb-local:latest
+    container_name: dynamodb-local
+    command: -jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data -port 8000
+    ports:
+      - "8000:8000"
+    mem_limit: 2g
+    cpus: "2.0"
+    environment:
+      - JAVA_TOOL_OPTIONS=-Xms256m -Xmx1g
+    volumes:
+      - ./.dynamodb:/home/dynamodblocal/data
+
+  dynamodb-admin:
+    image: aaronshaf/dynamodb-admin:latest
+    container_name: dynamodb-admin
+    profiles: [tools]
+    ports:
+      - "8001:8001"
+    mem_limit: 512m
+    cpus: "0.5"
+    environment:
+      - DYNAMO_ENDPOINT=http://dynamodb:8000
+      - AWS_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=dummy
+      - AWS_SECRET_ACCESS_KEY=dummy
+    depends_on:
+      - dynamodb
